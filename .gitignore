@@ -1,0 +1,32 @@
+# Data (too large / not versioned)
+data/raw/*.csv
+data/processed/*.csv
+data/processed/*.parquet
+
+# Reports / artifacts
+reports/figures/*.png
+*.html
+submission.csv
+submission_*.csv
+models/*.pkl
+models/*.joblib
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# OS / editors
+.DS_Store
+.vscode/
+_inspect.py
+_*.py
+
+# Keep folder structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!models/.gitkeep
+!reports/figures/.gitkeep
