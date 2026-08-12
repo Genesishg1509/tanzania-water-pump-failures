@@ -30,6 +30,9 @@ env/
 /_*.py
 /_commitmsg.txt
 
+# Local-only working notes (never published)
+*.local.md
+
 # Keep folder structure
 !data/raw/.gitkeep
 !data/processed/.gitkeep
