@@ -92,7 +92,12 @@ class FeatureEngineer:
     # ---- internals ----------------------------------------------------------
     @staticmethod
     def _normalize(df: pd.DataFrame) -> pd.DataFrame:
-        text_cols = df.select_dtypes(include=["object"]).columns
+        # Selected by "not numeric" rather than by the ``object`` dtype: pandas 3
+        # splits strings out of ``object``, so ``select_dtypes(include=["object"])``
+        # is both deprecated and no longer catches every text column.
+        text_cols = [c for c in df.columns
+                     if not pd.api.types.is_numeric_dtype(df[c])
+                     and not pd.api.types.is_datetime64_any_dtype(df[c])]
         for col in text_cols:
             df[col] = df[col].apply(normalize_text)
         return df

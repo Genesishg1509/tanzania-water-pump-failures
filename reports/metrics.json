@@ -1,0 +1,61 @@
+{
+  "models": {
+    "rf": {
+      "name": "Random Forest",
+      "accuracy": 0.7978114478114479,
+      "macro_f1": 0.7038583508446857,
+      "f1_needs_repair": 0.45705675539929685,
+      "roc_auc": 0.9041647962639544
+    },
+    "lgbm": {
+      "name": "LightGBM",
+      "accuracy": 0.7872895622895623,
+      "macro_f1": 0.6989002705684548,
+      "f1_needs_repair": 0.45981308411214955,
+      "roc_auc": 0.9019923332217484
+    }
+  },
+  "best": "rf",
+  "ranking": [
+    {
+      "inspections (k)": 500,
+      "precision@k": 0.994,
+      "recall@k": 0.09156226971260133,
+      "lift@k": 2.1755195283714075
+    },
+    {
+      "inspections (k)": 1000,
+      "precision@k": 0.993,
+      "recall@k": 0.1829403095062638,
+      "lift@k": 2.173330876934414
+    },
+    {
+      "inspections (k)": 2500,
+      "precision@k": 0.9728,
+      "recall@k": 0.44804716285924834,
+      "lift@k": 2.129120117907148
+    },
+    {
+      "inspections (k)": 5000,
+      "precision@k": 0.8324,
+      "recall@k": 0.7667649226234341,
+      "lift@k": 1.8218334561532792
+    }
+  ],
+  "cost": [
+    {
+      "decision rule": "argmax P(class)",
+      "accuracy": 0.7978114478114479,
+      "missed broken pumps": 1078,
+      "wasted visits": 1040,
+      "total cost": 10619.0
+    },
+    {
+      "decision rule": "min expected cost",
+      "accuracy": 0.5431818181818182,
+      "missed broken pumps": 47,
+      "wasted visits": 4884,
+      "total cost": 5750.0
+    }
+  ]
+}

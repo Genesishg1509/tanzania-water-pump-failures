@@ -4,7 +4,8 @@ data/processed/*.csv
 data/processed/*.parquet
 
 # Reports / artifacts
-reports/figures/*.png
+# NOTE: reports/figures/*.png is deliberately NOT ignored — those figures are
+# embedded in the README, so they must be versioned for GitHub to render them.
 *.html
 submission.csv
 submission_*.csv
@@ -22,8 +23,12 @@ env/
 # OS / editors
 .DS_Store
 .vscode/
-_inspect.py
-_*.py
+
+# Throwaway scratch scripts — anchored to the repo root on purpose.
+# An unanchored `_*.py` also matches `__init__.py`, which silently kept
+# src/__init__.py out of every clone.
+/_*.py
+/_commitmsg.txt
 
 # Keep folder structure
 !data/raw/.gitkeep
