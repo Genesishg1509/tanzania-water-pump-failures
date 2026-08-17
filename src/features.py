@@ -52,6 +52,7 @@ class FeatureEngineer:
     medians_: dict = field(default_factory=dict)
     district_mode_: int = 0
     longitude_by_region_: pd.Series = None
+    latitude_by_region_: pd.Series = None
     freq_maps_: dict = field(default_factory=dict)
     onehot_columns_: list = None
 
@@ -60,15 +61,17 @@ class FeatureEngineer:
         df = self._normalize(df.copy())
 
         # Zero-as-missing numeric columns -> train median (ignoring the zeros).
-        for col in C.ZERO_AS_MISSING_MEDIAN:
+        for col in C.ZERO_AS_MISSING_MEDIAN + C.ZERO_AS_MISSING_FLAGGED:
             self.medians_[col] = df[col].replace(0, np.nan).median()
 
         # district_code: 0 is invalid -> train mode.
         self.district_mode_ = int(df["district_code"].replace(0, np.nan).mode()[0])
 
         # longitude: 0 is invalid -> conditional median by region (train only).
+        # latitude is invalid on the same rows (constant sentinel), same fix.
         valid = df[df["longitude"] != 0]
         self.longitude_by_region_ = valid.groupby("region")["longitude"].median()
+        self.latitude_by_region_ = valid.groupby("region")["latitude"].median()
 
         # Frequency maps (train only).
         for col in C.FREQ_COLS:
@@ -113,14 +116,23 @@ class FeatureEngineer:
         for col in C.ZERO_AS_MISSING_MEDIAN:
             df[col] = df[col].replace(0, self.medians_[col])
 
+        # 2b) Same, but flag "was 0" first -- it correlates with the target.
+        for col in C.ZERO_AS_MISSING_FLAGGED:
+            df[col + "_was_missing"] = (df[col] == 0).astype(int)
+            df[col] = df[col].replace(0, self.medians_[col])
+
         # 3) district_code zeros -> train mode.
         df["district_code"] = df["district_code"].replace(0, self.district_mode_)
 
-        # 4) longitude zeros -> conditional median by region (fallback global).
+        # 4) longitude/latitude zeros -> conditional median by region.
         global_lon = self.longitude_by_region_.median()
+        global_lat = self.latitude_by_region_.median()
         mask = df["longitude"] == 0
         df.loc[mask, "longitude"] = (
             df.loc[mask, "region"].map(self.longitude_by_region_).fillna(global_lon)
+        )
+        df.loc[mask, "latitude"] = (
+            df.loc[mask, "region"].map(self.latitude_by_region_).fillna(global_lat)
         )
 
         # 5) Date features.

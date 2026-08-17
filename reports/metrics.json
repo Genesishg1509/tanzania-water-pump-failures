@@ -1,61 +1,112 @@
 {
   "models": {
+    "logreg": {
+      "name": "Logistic Regression",
+      "accuracy": 0.6394781144781144,
+      "macro_f1": 0.5682049561472071,
+      "f1_needs_repair": 0.29270833333333335,
+      "roc_auc": 0.8216965102648882
+    },
     "rf": {
       "name": "Random Forest",
-      "accuracy": 0.7978114478114479,
-      "macro_f1": 0.7038583508446857,
-      "f1_needs_repair": 0.45705675539929685,
-      "roc_auc": 0.9041647962639544
+      "accuracy": 0.7829124579124579,
+      "macro_f1": 0.6937879606774562,
+      "f1_needs_repair": 0.4539594843462247,
+      "roc_auc": 0.8995380262753443
     },
     "lgbm": {
       "name": "LightGBM",
-      "accuracy": 0.7872895622895623,
-      "macro_f1": 0.6989002705684548,
-      "f1_needs_repair": 0.45981308411214955,
-      "roc_auc": 0.9019923332217484
+      "accuracy": 0.7821548821548822,
+      "macro_f1": 0.6916265420794053,
+      "f1_needs_repair": 0.4478034955125177,
+      "roc_auc": 0.8984182692337238
+    },
+    "catboost": {
+      "name": "CatBoost",
+      "accuracy": 0.777020202020202,
+      "macro_f1": 0.680186215988289,
+      "f1_needs_repair": 0.4416270470153196,
+      "roc_auc": 0.8886793305641496
     }
   },
   "best": "rf",
+  "final_test_metrics": {
+    "name": "Random Forest (calibrated)",
+    "accuracy": 0.7978956228956229,
+    "macro_f1": 0.6972340337323968,
+    "f1_needs_repair": 0.4556803995006242,
+    "roc_auc": 0.9024294732261287
+  },
+  "calibration": {
+    "before": {
+      "non functional": {
+        "brier_score": 0.10976719149606971,
+        "ece": 0.05454417348346731
+      },
+      "functional": {
+        "brier_score": 0.1422047119269251,
+        "ece": 0.09244943546236555
+      },
+      "needs repair": {
+        "brier_score": 0.06296386679057761,
+        "ece": 0.08420953875272907
+      }
+    },
+    "after": {
+      "non functional": {
+        "brier_score": 0.10474161117338704,
+        "ece": 0.0288921563351624
+      },
+      "functional": {
+        "brier_score": 0.12710128522539094,
+        "ece": 0.02595431162917759
+      },
+      "needs repair": {
+        "brier_score": 0.052088477061519874,
+        "ece": 0.018047885646765568
+      }
+    }
+  },
   "ranking": [
     {
       "inspections (k)": 500,
-      "precision@k": 0.994,
-      "recall@k": 0.09156226971260133,
-      "lift@k": 2.1755195283714075
+      "precision@k": 0.998,
+      "recall@k": 0.091930729550479,
+      "lift@k": 2.1842741341193808
     },
     {
       "inspections (k)": 1000,
-      "precision@k": 0.993,
-      "recall@k": 0.1829403095062638,
-      "lift@k": 2.173330876934414
+      "precision@k": 0.997,
+      "recall@k": 0.18367722918201915,
+      "lift@k": 2.1820854826823877
     },
     {
       "inspections (k)": 2500,
-      "precision@k": 0.9728,
-      "recall@k": 0.44804716285924834,
-      "lift@k": 2.129120117907148
+      "precision@k": 0.9756,
+      "recall@k": 0.4493367722918202,
+      "lift@k": 2.1352483419307293
     },
     {
       "inspections (k)": 5000,
-      "precision@k": 0.8324,
-      "recall@k": 0.7667649226234341,
-      "lift@k": 1.8218334561532792
+      "precision@k": 0.8226,
+      "recall@k": 0.7577376565954311,
+      "lift@k": 1.8003846720707442
     }
   ],
   "cost": [
     {
       "decision rule": "argmax P(class)",
-      "accuracy": 0.7978114478114479,
-      "missed broken pumps": 1078,
-      "wasted visits": 1040,
-      "total cost": 10619.0
+      "accuracy": 0.7978956228956229,
+      "missed broken pumps": 1432,
+      "wasted visits": 760,
+      "total cost": 13364.0
     },
     {
       "decision rule": "min expected cost",
-      "accuracy": 0.5431818181818182,
-      "missed broken pumps": 47,
-      "wasted visits": 4884,
-      "total cost": 5750.0
+      "accuracy": 0.5957912457912458,
+      "missed broken pumps": 94,
+      "wasted visits": 4253,
+      "total cost": 5503.0
     }
   ]
 }

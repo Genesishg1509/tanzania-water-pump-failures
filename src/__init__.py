@@ -1,1 +1,1 @@
-"""Tanzania Water Pump — predicting and prioritizing pump failures."""
+"""Tanzania Water Pump - predicting and prioritizing pump failures."""

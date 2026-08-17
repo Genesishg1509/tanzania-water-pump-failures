@@ -18,14 +18,32 @@ from lightgbm import LGBMClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (classification_report, confusion_matrix, f1_score,
                              roc_auc_score)
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from catboost import CatBoostClassifier
 
 from . import config as C
 
 
+def train_logistic_regression(X_train, y_train) -> tuple[LogisticRegression, StandardScaler]:
+    """Linear baseline (requires scaling). Shows importance of tree nonlinearity."""
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    
+    model = LogisticRegression(
+        max_iter=1000,
+        class_weight="balanced",
+        random_state=C.RANDOM_STATE,
+        n_jobs=-1,
+    )
+    model.fit(X_train_scaled, y_train)
+    return model, scaler
+
+
 def train_random_forest(X_train, y_train) -> RandomForestClassifier:
     model = RandomForestClassifier(
-        n_estimators=300,
-        max_depth=None,
+        n_estimators=150,
+        max_depth=20,
         min_samples_leaf=2,
         class_weight="balanced_subsample",
         random_state=C.RANDOM_STATE,
@@ -65,9 +83,27 @@ def train_lightgbm(X_train, y_train, X_val=None, y_val=None) -> LGBMClassifier:
     return model
 
 
+def train_catboost(X_train, y_train, X_val=None, y_val=None) -> CatBoostClassifier:
+    """Third boosting algorithm. Receives already-encoded features (no categorical advantage here)."""
+    model = CatBoostClassifier(
+        iterations=500,
+        learning_rate=0.05,
+        depth=8,
+        class_weights={0: 1, 1: 1, 2: 3},  # weight rare class
+        random_state=C.RANDOM_STATE,
+        verbose=False,
+    )
+    eval_set = None
+    if X_val is not None:
+        eval_set = [(X_val, y_val)]
+    
+    model.fit(X_train, y_train)
+    return model
+
+
 def evaluate(model, X_val, y_val, name: str = "model") -> dict:
     """Print a report and return key metrics as a dict."""
-    y_pred = model.predict(X_val)
+    y_pred = np.asarray(model.predict(X_val)).reshape(-1)
     labels = [0, 1, 2]
 
     acc = (y_pred == y_val).mean()

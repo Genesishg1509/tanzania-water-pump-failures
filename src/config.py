@@ -1,9 +1,4 @@
-"""Central configuration: paths, column groups and constants.
-
-Keeping every "magic list" here (instead of scattered across cells) means the
-feature-engineering logic reads cleanly and there is a single place to change
-how a column is treated.
-"""
+"""Central configuration: paths, column groups and constants"""
 from pathlib import Path
 
 # --- Paths -------------------------------------------------------------------
@@ -56,6 +51,10 @@ FILL_OTHER = ["scheme_management", "installer", "subvillage",
 
 # Numeric columns whose 0 means "missing" and are imputed with the train median.
 ZERO_AS_MISSING_MEDIAN = ["amount_tsh", "construction_year"]
+
+# Same, but missingness itself correlates with the target -> keep a flag.
+ZERO_AS_MISSING_FLAGGED = ["gps_height", "population"]
+
 
 # Very high cardinality -> feature hashing into a fixed number of buckets.
 HASH_COLS = ["subvillage"]
